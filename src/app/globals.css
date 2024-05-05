@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  
+  img {
+    max-height: 250px;
+  }
+
+}
+
+@layer components {
+
+  /* New */
+
+  .main {
+    @apply flex min-h-screen flex-col
+  }
+
+  /* Old */
+  .see {
+    @apply border border-red-500;
+  }
+
+  .text {
+    @apply text-base font-medium;
+  }
+
+  .title {
+    @apply text-lg font-black capitalize whitespace-nowrap;
+  }
+
+  .title-big {
+    @apply text-2xl md:text-6xl xl:text-8xl
+    font-black flex gap-2 md:gap-3 xl:gap-4;
+  }
+
+  .btn-light {
+    @apply
+    w-fit p-2 md:px-4 title cursor-pointer
+    outline-none border border-light duration-300 rounded-sm
+    bg-transparent text-light hover:bg-sh-light flex items-center justify-center gap-2;
+  }
+
+  .btn-dark {
+    @apply
+    w-fit p-2 md:px-4 title cursor-pointer
+    outline-none ring-1 ring-sh-dark duration-300 rounded-sm
+    bg-transparent text-dark hover:bg-sh-light flex items-center justify-center gap-2;
+  }
+
+  .btn-dark-select {
+    @apply bg-dark text-light hover:bg-dark;
+  }
+
+  .btn-red {
+    @apply
+    flex items-center justify-center gap-2 w-fit p-2 md:px-4 text-sm cursor-pointer title
+    outline-none rounded-md bg-red-200 text-red-600;
+  }
+
+  .input {
+    @apply bg-transparent w-full ring-1 ring-sh-dark
+    p-4 outline-none duration-300 rounded-sm
+    placeholder:text-dark placeholder:opacity-50 focus:bg-sh-light;
+  }
+
+  .link {
+    @apply
+    relative p-2
+    flex items-center justify-center gap-2 title px-2 border-y border-transparent
+    hover:border-b-sh-light duration-300
+  }
+
+  .menu {
+    @apply
+    absolute top-full left-0 w-fit 
+    bg-dark text-light flex flex-col overflow-hidden
+    border border-sh-light rounded-sm;
+  }
+
+  .menu-option {
+    @apply
+    flex justify-start items-center gap-2 w-full text-base font-bold capitalize
+    text-light p-2 border-t first:border-0 border-sh-light
+    hover:bg-sh-light duration-300 whitespace-nowrap
+  }
+
+  .option {
+    @apply flex items-center gap-2 p-2 text-sm capitalize duration-300
+    whitespace-nowrap text-light hover:bg-sh-light rounded-md
+  }
+
+  .option-active {
+    @apply flex items-center gap-2 p-2 text-sm capitalize
+    whitespace-nowrap bg-light text-dark rounded-md
+  }
+
+  .option-disabled {
+    @apply flex items-center gap-2 p-2 text-sm capitalize
+    whitespace-nowrap text-light
+  }
+
+  .option-split {
+    @apply border-b border-sh-light
+  }
+
+}
+
+@layer utilities {
+  .max-width {
+    @apply max-w-[1300px] w-full mx-auto;
+  }
+}
