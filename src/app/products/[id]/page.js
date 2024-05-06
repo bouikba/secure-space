@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { PRODUCTS } from "@/data/constant";
 import { Header, Icon, Loading, ProductCard } from "@/components";
@@ -17,70 +17,15 @@ export default function ProductDetails({ params }) {
         searchProduct()
     }, [])
 
-    const [userData, setUserData] = useState(null)
     const [displayImage, setDisplayImage] = useState(false)
+    const [imageIndex, setImageIndex] = useState(0)
     const router = useRouter()
 
-    const funcPurchase = (e) => {
-        // e.stopPropagation()
-        // if (!userData) return
-        // if (userData.purchase.includes(product.id)) {
-        //     fetch(`/api/products?action=pull-purchase&id=${product.id}`)
-        //         .then(res => res.json())
-        //         .then(res => {
-        //             if (res.status) {
-        //                 setUserData({
-        //                     ...userData,
-        //                     purchase: userData.purchase.filter(id => id !== product.id)
-        //                 })
-        //             }
-        //         })
-        // } else {
-        //     fetch(`/api/products?action=push-purchase&id=${product.id}`)
-        //         .then(res => res.json())
-        //         .then(res => {
-        //             if (res.status) {
-        //                 setUserData({
-        //                     ...userData,
-        //                     purchase: [
-        //                         ...userData.purchase,
-        //                         product.id
-        //                     ]
-        //                 })
-        //             }
-        //         })
-        //     router.push(`/products/request/${product.id}`)
-        // }
+    const funcSwitchImageForward = () => {
+        setImageIndex(state => state < product.imgs.length - 1 ? state + 1 : 0)
     }
-    const funcSave = (e) => {
-        // e.stopPropagation()
-        // if (!userData) return
-        // if (userData.saved.includes(product.id)) {
-        //     fetch(`/api/products?action=pull-saved&id=${product.id}`)
-        //         .then(res => res.json())
-        //         .then(res => {
-        //             if (res.status) {
-        //                 setUserData(state => ({
-        //                     ...state,
-        //                     saved: state.saved.filter(id => id !== product.id)
-        //                 }))
-        //             }
-        //         })
-        // } else {
-        //     fetch(`/api/products?action=push-saved&id=${product.id}`)
-        //         .then(res => res.json())
-        //         .then(res => {
-        //             if (res.status) {
-        //                 setUserData(state => ({
-        //                     ...state,
-        //                     saved: [
-        //                         ...state.saved,
-        //                         product.id
-        //                     ]
-        //                 }))
-        //             }
-        //         })
-        // }
+    const funcSwitchImageBackward = () => {
+        setImageIndex(state => state > 0 ? state - 1 : product.imgs.length - 1)
     }
     const funcDisplayProductImage = () => {
         setDisplayImage(true)
@@ -115,15 +60,33 @@ export default function ProductDetails({ params }) {
                 <div className="grid grid-cols-6 items-stretch gap-4 shadow-md shadow-sh-dark">
                     {/* Image */}
                     <div
-                        className="relative bg-white hover:bg-light duration-300 cursor-pointer flex items-center justify-center col-span-6 md:col-span-3"
-                        onClick={funcDisplayProductImage}
+                        className="relative bg-white flex justify-center items-center overflow-hidden col-span-6 md:col-span-3"
                     >
-                        <div className="absolute top-0 left-0 m-4 opacity-50 text">Zoom</div>
                         <img
-                            className="w-full max-h-[500px] object-contain"
-                            src={product.img}
+                            className="h-full max-h-[400px] object-contain"
+                            src={product.imgs[imageIndex]}
                             alt="product"
                         />
+                        <div className="absolute w-full h-full flex justify-between items-center p-4">
+                            <button
+                                className="btn-dark absolute top-0 right-0 m-4"
+                                onClick={funcDisplayProductImage}
+                            >
+                                <Icon type="image" />
+                            </button>
+                            <button
+                                className="btn-dark"
+                                onClick={funcSwitchImageBackward}
+                            >
+                                <Icon type="chevronLeft" />
+                            </button>
+                            <button
+                                className="btn-dark"
+                                onClick={funcSwitchImageForward}
+                            >
+                                <Icon type="chevronRight" />
+                            </button>
+                        </div>
                     </div>
                     {/* Details */}
                     <div className="bg-light flex flex-col justify-end gap-4 md:gap-6 p-2 md:p-10 col-span-6 md:col-span-3">
@@ -139,18 +102,16 @@ export default function ProductDetails({ params }) {
 
                         <div className="flex items-center gap-2">
                             <button
-                                className={`btn-dark ${userData && userData.purchase.includes(product.id) ? "bg-yellow-500 hover:bg-yellow-500" : ""}`}
-                                onClick={funcPurchase}
+                                className={`btn-dark`}
                             >
                                 <Icon type="store" />
-                                <span>{userData && userData.purchase.includes(product.id) ? "pendding" : "buy"}</span>
+                                <span>buy</span>
                             </button>
                             <button
-                                className={`btn-dark ${userData && userData.saved.includes(product.id) ? "btn-dark-select" : ""}`}
-                                onClick={funcSave}
+                                className={`btn-dark`}
                             >
                                 <Icon type="save" />
-                                <span>{userData && userData.saved.includes(product.id) ? "marked" : "mark"}</span>
+                                <span>mark</span>
                             </button>
                         </div>
 
@@ -162,7 +123,7 @@ export default function ProductDetails({ params }) {
 
                     </div>
                 </div>
-                <SimilarProducts id={product.id} collection={product.collection}/>
+                <SimilarProducts id={product.id} collection={product.collection} />
                 {
                     displayImage &&
                     <div
@@ -176,8 +137,8 @@ export default function ProductDetails({ params }) {
                             <Icon type="close" size={30} />
                         </button>
                         <img
-                            className="w-full min-h-full object-contain"
-                            src={product.img}
+                            className="w-full h-full max-h-[800px] object-contain"
+                            src={product.imgs[imageIndex]}
                             alt="product"
                             quality={100}
                         />
@@ -190,6 +151,16 @@ export default function ProductDetails({ params }) {
 }
 
 function Rating({ rating }) {
+
+    const midRating = useMemo(() => {
+        let middle = 0
+        for (let i = 0; i < rating.length; i++) {
+            middle += rating[i]
+        }
+        middle = Math.floor(middle / rating.length)
+        return middle
+    }, [rating])
+
     return (
         <div className="flex items-center gap-2">
 
@@ -222,19 +193,19 @@ function Rating({ rating }) {
             </div>
             <div className="flex flex-col items-end gap-4 w-full border border-sh-dark p-2">
                 <div className="w-full border border-sh-dark h-[15px] p-1">
-                    <div className="bg-sh-dark h-full" style={{ width: rating ? rating[4] : 0 }} />
+                    <div className="bg-sh-dark h-full" style={{ width: `calc(${rating[4] / midRating * 100}px / 100%)` }} />
                 </div>
                 <div className="w-full border border-sh-dark h-[15px] p-1">
-                    <div className="bg-sh-dark h-full" style={{ width: rating ? rating[3] : 0 }} />
+                    <div className="bg-sh-dark h-full" style={{ width: `calc(${rating[4] / midRating * 100}px / 100%)` }} />
                 </div>
                 <div className="w-full border border-sh-dark h-[15px] p-1">
-                    <div className="bg-sh-dark h-full" style={{ width: rating ? rating[2] : 0 }} />
+                    <div className="bg-sh-dark h-full" style={{ width: `calc(${rating[4] / midRating * 100}px / 100%)` }} />
                 </div>
                 <div className="w-full border border-sh-dark h-[15px] p-1">
-                    <div className="bg-sh-dark h-full" style={{ width: rating ? rating[1] : 0 }} />
+                    <div className="bg-sh-dark h-full" style={{ width: `calc(${rating[4] / midRating * 100}px / 100%)` }} />
                 </div>
                 <div className="w-full border border-sh-dark h-[15px] p-1">
-                    <div className="bg-sh-dark h-full" style={{ width: rating ? rating[0] : 0 }} />
+                    <div className="bg-sh-dark h-full" style={{ width: `calc(${rating[4] / midRating * 100}px / 100%)` }} />
                 </div>
             </div>
 

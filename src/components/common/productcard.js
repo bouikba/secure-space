@@ -1,7 +1,6 @@
 "use client"
 import { Icon } from "@/components";
 import { useRouter } from "next/navigation";
-import { useState } from "react"
 
 export function ProductCard({ product }) {
 
@@ -28,7 +27,7 @@ export function ProductCard({ product }) {
             </div>
             <img
                 className="object-cover"
-                src={product.img}
+                src={product.defaultImg}
             />
             <div className="flex items-center gap-2 w-full">
                 <div className="w-full text-red-400 text-2xl font-bold rounded-md p-2">

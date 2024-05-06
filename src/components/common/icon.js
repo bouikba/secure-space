@@ -8,7 +8,8 @@ import {
     FiChevronUp,
     FiSearch,
     FiLogIn,
-    FiLogOut
+    FiLogOut,
+    FiImage
 } from "react-icons/fi";
 import {
     MdOutlineLocalGroceryStore,
@@ -44,6 +45,8 @@ export function Icon({ type, style, size }) {
     const _style = style || "";
     const _size = size || 20;
     switch (type) {
+        case "image":
+            return <FiImage className={_style} size={_size} />
         case "send":
             return <IoIosSend className={_style} size={_size} />
         case "support":

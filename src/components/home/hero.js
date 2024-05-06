@@ -42,7 +42,11 @@ export function Hero() {
     return (
         <div
             ref={container}
-            className="relative bg-dark text-light min-h-screen overflow-hidden"
+            className="relative flex items-center justify-center bg-dark text-light overflow-hidden"
+            style={{
+                marginTop: 60,
+                height: "50vh"
+            }}
         >
             <div className="w-full h-full absolute opacity-30 pointer-events-none z-0">
                 <img

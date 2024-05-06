@@ -12,7 +12,7 @@ export default function Home() {
       <Header />
       <Hero />
       <div className="bg-dark p-4" />
-      <Products />
+      // <Products />
       <div className="bg-dark p-4" />
       <Services />
       <Footer />
