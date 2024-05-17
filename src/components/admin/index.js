@@ -6,13 +6,14 @@ import Commands from "./commands"
 import Products from "./products"
 import Services from "./services"
 import Users from "./users"
+import Dashboard from "./dashboard"
 
 export function Admin() {
 
-    const [section, setSection] = useState("")
+    const [section, setSection] = useState("dashboard")
 
     return (
-        <main className="h-screen flex items-stretch">
+        <main className="h-screen flex items-stretch overflow-hidden">
             <Aside section={section} setSection={setSection}/>
             <Section section={section}/>
         </main>
@@ -23,15 +24,21 @@ export function Admin() {
 function Aside({ section, setSection }) {
 
     return (
-        <div className="w-[250px] flex flex-col p-2 gap-2 bg-dark">
+        <div className="min-w-[250px] h-full flex flex-col p-4 gap-4 bg-dark">
             <Link
                 className="option-disabled"
                 href="/"
             >
-                <Icon type="logo" />
+                <Icon type="logo" size={20} />
                 <span>securespace</span>
             </Link>
-            <div className="option-split"/>
+            <button
+                className={section === "dashboard" ? "option-active" : "option"}
+                onClick={() => setSection("dashboard")}
+            >
+                <Icon type="dashboard" />
+                <span>dashboard</span>
+            </button>
             <button
                 className={section === "commands" ? "option-active" : "option"}
                 onClick={() => setSection("commands")}
@@ -72,11 +79,7 @@ function Section({ section }) {
         case "products": return <Products />
         case "services": return <Services />
         case "users": return <Users />
-        default: return (
-            <div className="h-full w-full flex items-center justify-center">
-                <Icon type="logo" size={100} />
-            </div>
-        )
+        case "dashboard": return <Dashboard/>
     }
 
 }

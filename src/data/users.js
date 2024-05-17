@@ -13,11 +13,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: true
     },
-    purchase: {
-        type: Array,
-        require: true
-    },
-    saved: {
+    marked: {
         type: Array,
         require: true
     },

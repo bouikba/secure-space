@@ -1,7 +1,7 @@
 "use client"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { Icon } from "@/components"
 import Link from "next/link"
 import { Teko } from "next/font/google"
@@ -10,6 +10,13 @@ const font = Teko({ subsets: ["latin"] })
 export function Hero() {
 
     const container = useRef(null)
+    const heroVideo = useRef(null)
+
+    useEffect(() => {
+        if (heroVideo.current) {
+            heroVideo.current.play()
+        }
+    }, [])
 
     // Animation
     useGSAP(() => {
@@ -42,20 +49,23 @@ export function Hero() {
     return (
         <div
             ref={container}
-            className="relative flex items-center justify-center bg-dark text-light overflow-hidden"
+            className="relative flex items-center justify-center bg-dark text-light"
             style={{
                 marginTop: 60,
-                height: "50vh"
+                height: "60vh"
             }}
         >
-            <div className="w-full h-full absolute opacity-30 pointer-events-none z-0">
-                <img
-                    src="/hero.jpg"
-                    className="image w-full h-full max-h-full object-cover"
+            <div className="w-full h-full absolute opacity-50 pointer-events-none z-0">
+                <video
+                    ref={heroVideo}
+                    className="w-full h-full object-cover"
+                    src="/hero-video.mp4"
+                    loop={true}
                 />
             </div>
             <div className="flex items-center justify-center min-h-screen max-width p-4 z-10">
                 <div className="flex items-center flex-col gap-4">
+                    <Icon type="logo" size={100} />
                     <div className={`title-big ${font.className}`}>
                         <span className="word">Your</span>
                         <span className="word">are</span>
@@ -73,7 +83,8 @@ export function Hero() {
                         className="explore btn-light"
                         href="#products-explore"
                     >
-                        <Icon type="chevronDown" size={30} />
+                        explore
+                        <Icon type="chevronDown" />
                     </Link>
                 </div>
             </div>

@@ -9,7 +9,8 @@ import {
     FiSearch,
     FiLogIn,
     FiLogOut,
-    FiImage
+    FiEye,
+    FiStar
 } from "react-icons/fi";
 import {
     MdOutlineLocalGroceryStore,
@@ -21,7 +22,9 @@ import {
     MdBorderColor,
     MdOutlineUpdate,
     MdMedicalServices,
-    MdContactSupport
+    MdContactSupport,
+    MdDashboard,
+    MdCircle
 } from "react-icons/md";
 import {
     FaStar,
@@ -45,8 +48,12 @@ export function Icon({ type, style, size }) {
     const _style = style || "";
     const _size = size || 20;
     switch (type) {
-        case "image":
-            return <FiImage className={_style} size={_size} />
+        case "circle":
+            return <MdCircle className={_style} size={_size} />
+        case "dashboard":
+            return <MdDashboard className={_style} size={_size} />
+        case "zoom":
+            return <FiEye className={_style} size={_size} />
         case "send":
             return <IoIosSend className={_style} size={_size} />
         case "support":
@@ -96,7 +103,7 @@ export function Icon({ type, style, size }) {
         case "delete":
             return <MdClose className={_style} size={_size} />;
         case "star":
-            return <FaStar className={_style} size={_size} />;
+            return <FiStar className={_style} size={_size} />;
         case "profile":
             return <BiUser className={_style} size={_size} />;
         case "add":

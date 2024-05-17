@@ -7,6 +7,7 @@ export { Services } from "./home/services"
 export { Products } from "./home/products"
 export { Footer } from "./home/footer"
 export { AuthProvider } from "./home/authprovider"
+export { Links} from "./home/links"
 
 // admin
 export { Admin } from "./admin"

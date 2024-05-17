@@ -1,12 +1,22 @@
 "use client"
-import { useSession, signOut } from "next-auth/react"
+import { Header, Loading, ProductCard } from "@/components"
+import { signOut, useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
-import { Header, Icon, Loading, ProductCard } from "@/components"
 import { PRODUCTS } from "@/data/constant"
 
 export default function Profile() {
 
+    const [markedList, setMarkedList] = useState([])
     const session = useSession()
+    useEffect(() => {
+        fetch("/api/products")
+            .then(res => res.json())
+            .then(res => {
+                if (res.status) {
+                    setMarkedList(res.marked)
+                }
+            })
+    }, [])
 
     return session.data ? (
         <main className="main">
@@ -14,9 +24,9 @@ export default function Profile() {
             <div className="grid grid-cols-8 gap-4 max-width py-32 px-4 xl:px-0">
 
                 {/* Profile */}
-                <div className="bg-light h-fit flex flex-col gap-2 p-4 col-span-8 lg:col-span-2">
+                <div className="bg-light h-fit flex flex-col gap-2 p-4 col-span-8 lg:col-span-2 rounded-md shadow-md shadow-sh-dark">
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col items-center gap-4">
                         <img
                             className="rounded-md"
                             src={session.data.user.image}
@@ -30,43 +40,37 @@ export default function Profile() {
                                 ****@
                             </span>
                         </div>
+                        <button
+                            className="btn-dark w-full"
+                            onClick={() => signOut("google")}
+                        >
+                            signout
+                        </button>
                     </div>
-
-                    {/* <button
-                        className={`btn-dark ${section === "purchase" ? 'btn-dark-select': ''} justify-between w-full`}
-                        onClick={() => setSection("purchase")}
-                    >
-                        <Icon type="store" />
-                        <span>Purchase</span>
-                        <span>{
-                            (userData["purchase"].length < 10 ?'0' :'') + userData["purchase"].length
-                        }</span>
-                    </button>
-
-                    <button
-                        className={`btn-dark ${section === "saved" ? 'btn-dark-select': ''} justify-between w-full`}
-                        onClick={() => setSection("saved")}
-                    >
-                        <Icon type="save" />
-                        <span>Saved</span>
-                        <span>{
-                            (userData["saved"].length < 10 ?'0' :'') + userData["saved"].length
-                        }</span>
-                    </button>
-
-                    <button
-                        className="btn-dark justify-start w-full"
-                        onClick={() => signOut()}
-                    >
-                        <Icon type="signOut" />
-                        Sign Out
-                    </button> */}
 
                 </div>
 
                 {/* Section  */}
-                <div id="items" className="bg-light flex flex-wrap items-start gap-4 p-4 min-h-[500px] col-span-8 lg:col-span-6">
-                    <EmptyBox />
+                <div id="items" className="bg-light flex flex-wrap items-start gap-4 p-4 min-h-[500px] col-span-8 lg:col-span-6 rounded-md border border-sh-dark">
+                    {
+                        markedList.length
+                            ?
+                            <div className="flex flex-wrap gap-4">
+                                <div className="flex items-center w-full">
+                                    <span className="title opacity-50">marked products</span>
+                                </div>
+                                {
+                                    PRODUCTS.map(product => {
+                                        if (markedList.includes(product.id))
+                                            return (
+                                                <ProductCard key={product.key} product={product} />
+                                            )
+                                    })
+                                }
+                            </div>
+                            :
+                            <EmptyBox />
+                    }
                 </div>
 
             </div>

@@ -23,7 +23,7 @@ export function Products() {
             ease: "power3",
             scrollTrigger: {
                 trigger: ".word",
-                start: "top 80%",
+                start: "top 50%",
                 end: "bottom 60%",
                 scrub: 1
             }
@@ -46,7 +46,7 @@ export function Products() {
         <div
             ref={container}
             id="products-explore"
-            className="relative bg-light flex flex-col justify-center text-dark min-h-screen overflow-hidden"
+            className="relative flex flex-col justify-center text-dark min-h-screen overflow-hidden"
         >
             <div className="flex flex-col items-center max-width p-4 xl:p-10 gap-4 xl:gap-10">
                 <div className={`title-big text-dark ${font.className}`}>

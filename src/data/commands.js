@@ -8,7 +8,6 @@ const commandsSchema = new mongoose.Schema({
     phone: String,
     date: String,
     type: String,
-    status: Number,
 })
 
 export default mongoose.models.commands || mongoose.model('commands', commandsSchema)

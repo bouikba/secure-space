@@ -1,59 +1,74 @@
 "use client"
-import { useState, useEffect } from "react"
+
+import { useEffect, useState } from "react"
+import { Loading } from "@/components"
 
 export default function Users() {
 
-    const [data, setData] = useState(null)
+    const [users, setUsers] = useState(null)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
-        fetch("/api?get=users")
+        fetch("/api/users")
             .then(res => res.json())
             .then(res => {
-                if (res.status) setData(res.data)
-                console.log(res)
+                if (res.status) {
+                    setUsers(res.users)
+                }
             })
-    }, [])
+    }, [refresh])
 
-    function funcParseDate(time) {
-        const addZero = n => n < 10 ? '0' + n : n
-        const date = new Date(time)
-        return `${addZero(date.getFullYear())}/${addZero(date.getMonth())}/${addZero(date.getDay())}`
-    }
-    function funcBanUser(email){
-        // fetch("/api", {
-        //     meth
-        // })
+    const funcDeleteUser = (email) => {
+        fetch("/api/users", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email
+            })
+        })
+            .then(res => res.json())
+            .then(res => {
+                if (res.status) {
+                    setRefresh(state => !state)
+                }
+            })
     }
 
-    return data && (
-        <div className="flex flex-col p-4">
-            <div className="bg-dark text-light grid grid-cols-6 p-2">
-                <div>Picture</div>
-                <div>Name</div>
-                <div>Email</div>
-                <div>Join date</div>
-            </div>
-            {
-                data.map(user => {
-                    return (
-                        <div
-                            key={user._id}
-                            className="grid grid-cols-6 items-center odd:bg-sh-dark p-2"
-                        >
-                            <img src={user.picture} width={40} height={40} />
-                            <div>{user.name}</div>
-                            <div>{user.email}</div>
-                            <div>{funcParseDate(user.join)}</div>
-                            <button
-                                className="btn-red"
-                                onClick={funcBanUser(user.email)}
+    return users ? (
+        <div className="w-full overflow-u-scroll flex flex-col gap-10 p-4">
+            <div className="title">Users management</div>
+            <div className="flex flex-col gap-10 p-10 bg-white rounded-md shadow-md shadow-sh-dark">
+                <div className="grid grid-cols-5 items-center">
+                    <span className="title">#</span>
+                    <span className="title">picture</span>
+                    <span className="title">name</span>
+                    <span className="title">email</span>
+                    <span className="title">action</span>
+                </div>
+                {
+                    users.map((user, index) => {
+                        return (
+                            <div
+                                key={user._id}
+                                className="grid grid-cols-5 items-center"
                             >
-                                ban
-                            </button>
-                        </div>
-                    )
-                })
-            }
-        </div>
-    )
+                                <span className="text">{index}</span>
+                                <img src={user.picture} className="max-w-[50px] rounded-full" alt="user" />
+                                <span className="text">{user.name}</span>
+                                <span className="text">{user.email}</span>
+                                <button
+                                    className="btn-red"
+                                    onClick={() => funcDeleteUser(user.email)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+        </div >
+    ) : <Loading />
 }

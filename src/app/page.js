@@ -3,7 +3,8 @@ import {
   Hero,
   Products,
   Services,
-  Footer
+  Footer,
+  Links
 } from "@/components";
 
 export default function Home() {
@@ -11,9 +12,8 @@ export default function Home() {
     <main className="main">
       <Header />
       <Hero />
-      <div className="bg-dark p-4" />
-      // <Products />
-      <div className="bg-dark p-4" />
+      <Links/>
+      <Products />
       <Services />
       <Footer />
     </main>

@@ -1,7 +1,6 @@
 import GoogleProvider from "next-auth/providers/google"
 import users from "@/data/users"
 import { connectToDatabase } from "@/utils"
-import blacklist from "@/data/blacklist"
 
 export const authOptions = {
     providers: [
@@ -25,7 +24,6 @@ export const authOptions = {
 async function _signIn(profile) {
 
     await connectToDatabase()
-    if(await isInBlackList()) return
     if (await isOld(profile.email)) await updateUser(profile)
     else await setupUser(profile)
 
@@ -36,13 +34,6 @@ async function isOld(email) {
 
     if (email === undefined) return false
     return await users.findOne({ "email": email }) ? true : false
-
-}
-
-async function isInBlackList(email) {
-
-    if (email === undefined) return false
-    return await blacklist.findOne({ "email": email }) ? true : false
 
 }
 

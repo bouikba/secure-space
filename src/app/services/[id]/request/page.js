@@ -2,19 +2,29 @@
 import { Header, Loading } from "@/components"
 import { SERVICES } from "@/data/constant"
 import { useState, useMemo } from "react"
+import { useSession } from "next-auth/react"
 
 export default function Request({ params }) {
 
+    const session = useSession()
     const service = useMemo(() => {
         return SERVICES.filter(s => s.id === Number(params.id))[0] || null
     }, [])
 
-    return service ? (
+    return service && session.status === "authenticated" ? (
         <main className="main">
             <Header />
-            <RequestForm service={service}/>
+            <RequestForm service={service} />
         </main>
-    ) : <Loading />
+    ) : (
+        session.status === "unauthenticated" ? (
+            <main className="main">
+                <Header />
+                <div className="w-screen h-screen flex items-center justify-center title">Please sign in !</div>
+            </main>
+        )
+            : <Loading />
+    )
 
 }
 
@@ -25,38 +35,35 @@ function RequestForm({ service }) {
     const [address, setAddress] = useState("")
     const [date, setDate] = useState("")
 
-    // const funcRequestService = () => {
+    const funcRequestService = () => {
 
-    //     if (phone && address && date) {
-    //         fetch("/api", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 action: "add-command",
-    //                 command: {
-    //                     type: service.title,
-    //                     phone,
-    //                     address,
-    //                     date,
-    //                 }
-    //             })
-    //         })
-    //             .then(res => res.json())
-    //             .then(res => {
-    //                 if (res.status) {
-    //                     window.history.go(-1)
-    //                 }
-    //             })
-    //     }
+        if (phone && address && date) {
+            fetch("/api/commands", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    type: service.title,
+                    phone,
+                    address,
+                    date,
+                })
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.status) {
+                        window.history.go(-1)
+                    }
+                })
+        }
 
-    // }
-    // const funcCancelRequest = () => {
+    }
+    const funcCancelRequest = () => {
 
-    //     window.history.go(-1)
+        window.history.go(-1)
 
-    // }
+    }
 
     return (
         <div className="max-width min-h-screen flex flex-col md:flex-row items-center content-stretch gap-4 px-4 xl:px-0 py-32">
@@ -64,7 +71,7 @@ function RequestForm({ service }) {
             <div className="w-full flex flex-col md:flex-row">
                 <div className="w-full">
                     <img
-                        className="h-full max-h-none object-cover block"
+                        className="w-full h-full max-w-none object-cover block"
                         src={service.img}
                         alt="service cover"
                     />
@@ -75,7 +82,7 @@ function RequestForm({ service }) {
                     <input
                         className="input"
                         type="number"
-                        placeholder="00000..."
+                        placeholder="+212 (xxx) xxx-xx-xx"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                     />
@@ -98,13 +105,13 @@ function RequestForm({ service }) {
                     <div className="flex items-center gap-4">
                         <button
                             className="btn-dark"
-                            // onClick={funcRequestService}
+                            onClick={funcRequestService}
                         >
                             Confirm
                         </button>
                         <button
                             className="btn-dark"
-                            // onClick={funcCancelRequest}
+                            onClick={funcCancelRequest}
                         >
                             cancel
                         </button>

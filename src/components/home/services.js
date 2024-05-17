@@ -44,7 +44,7 @@ export function Services() {
     return (
         <div
             ref={container}
-            className="relative bg-light flex flex-col justify-center min-h-screen overflow-hidden"
+            className="relative flex flex-col justify-center min-h-screen overflow-hidden"
         >
             <div className="flex flex-col items-center max-width p-4 xl:p-10 gap-4 xl:gap-10">
                 <div className={`title-big text-dark ${font.className}`}>
@@ -52,7 +52,7 @@ export function Services() {
                     <span className="word">Our</span>
                     <span className="word">Services</span>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2 md:gap-4 xl:gap-10">
+                <div className="flex flex-col gap-6">
                     {
                         SERVICES.map(service => {
                             return <ServiceCard key={service.id} service={service} />

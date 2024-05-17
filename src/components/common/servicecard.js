@@ -1,21 +1,55 @@
 import Link from "next/link"
+import { Icon } from "@/components"
 
 export function ServiceCard({ service }) {
     return (
-        <Link
-            className="service-card group relative flex flex-col overflow-hidden cursor-pointer w-full shadow-md shadow-sh-dark rounded-md"
-            href={`/services/${service.id}`}
+        <div
+            id={`id-${service.id}`}
+            className="service-card group relative flex flex-col md:flex-row md:even:flex-row-reverse items-stretch p-4 gap-4 overflow-hidden cursor-pointer w-full shadow-md shadow-sh-dark rounded-md"
         >
-            <img
-                className="h-full object-cover group-hover:opacity-20 duration-500"
-                src={service.img}
-            />
-            <div className="text-dark title text-center p-4">
-                {service.title}
+            <div className="md:w-1/2 min-h-full">
+                <img
+                    className="h-full w-full max-w-none object-cover"
+                    src={service.img}
+                />
             </div>
-            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center text-dark title whitespace-break-spaces opacity-0 group-hover:opacity-100 duration-500 p-4 text-center">
-                {service.description}
+            <div className="md:w-1/2 flex flex-col gap-4">
+                <div className="text-dark title border-l-4 border-dark pl-4">
+                    {service.title}
+                </div>
+                <div className="text-dark">
+                    {service.description}
+                </div>
+                <Features features={service.features} />
+                <Link
+                    className="btn-dark self-end group-even:self-start"
+                    href={`/services/${service.id}`}
+                >
+                    <span>learn more</span>
+                    <Icon type="chevronRight" />
+                </Link>
             </div>
-        </Link>
+
+        </div>
+    )
+}
+
+function Features({ features }) {
+    return (
+        <div className="flex flex-col gap-2">
+            {
+                features.map(feature => {
+                    return (
+                        <div
+                            key={feature.title}
+                            className="flex items-center gap-2"
+                        >
+                            <Icon type="check" size={30} style="opacity-50" />
+                            <span>{feature.title}</span>
+                        </div>
+                    )
+                })
+            }
+        </div>
     )
 }

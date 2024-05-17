@@ -5,8 +5,8 @@ import { useState, useEffect, useRef, useMemo } from "react"
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import { Icon } from "@/components"
-import { signIn, signOut, useSession } from "next-auth/react"
-import { PRODUCTS, SERVICES } from "@/data/constant"
+import { signIn, useSession } from "next-auth/react"
+import { ADMIN_LIST, PRODUCTS, SERVICES } from "@/data/constant"
 
 export function Header() {
 
@@ -35,6 +35,7 @@ export function Header() {
                     <Products />
                     <Services />
                     <Support />
+                    <AdminButton />
                 </div>
                 <div className="hidden md:block">
                     <SignButton />
@@ -108,6 +109,7 @@ function Products() {
                         collections.map(c => {
                             return (
                                 <Link
+                                    key={c}
                                     className="menu-option"
                                     href={`/products/collection/${c}`}
                                 >
@@ -168,6 +170,7 @@ function Services() {
                         types.map(type => {
                             return (
                                 <Link
+                                    key={type.id}
                                     className="menu-option"
                                     href={`/services/${type.id}`}
                                 >
@@ -197,61 +200,21 @@ function Support() {
 function SignButton() {
 
     const session = useSession()
-    const [o, setO] = useState(false)
-    const currentParent = useRef(null)
-
-    useEffect(() => {
-
-        function handleClickOutside(event) {
-            if (
-                currentParent.current &&
-                !currentParent.current.contains(event.target)
-            ) {
-                setO(false)
-            }
-        }
-        document.addEventListener("mousedown", handleClickOutside)
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside)
-        }
-    }, [])
 
     return session.status === "authenticated"
         ? (
-            <button
-                ref={currentParent}
-                onClick={() => setO(state => !state)}
-                className="btn-light w-fit"
+            <Link
+                className="link"
+                href="/profile"
             >
-                <Icon type="profile" size={24} />
-                {
-                    o &&
-                    <div className="menu left-auto right-0 w-[200px]">
-                        <Link
-                            className="menu-option"
-                            href="/profile"
-                        >
-                            <img
-                                className="rounded-md"
-                                src={session.data.user.image}
-                                width={50}
-                                height={50}
-                            />
-                            <span className="whitespace-nowrap">
-                                {session.data.user.name}
-                            </span>
-                        </Link>
-                        <button
-                            onClick={() => signOut("google")}
-                            className="menu-option"
-                        >
-                            <span className="whitespace-nowrap">
-                                Sign Out
-                            </span>
-                        </button>
-                    </div>
-                }
-            </button>
+                <img
+                    className="w-[30px] rounded-full"
+                    title={session.data.user.name}
+                    src={session.data.user.image}
+                    width={30}
+                    height={30}
+                />
+            </Link>
         )
         : (
             <button
@@ -261,6 +224,28 @@ function SignButton() {
                 <span className="uppercase">Sign In</span>
             </button>
         )
+}
+
+function AdminButton() {
+
+    const [isAdmin, setIsAdmin] = useState(false)
+    const session = useSession()
+
+    useEffect(() => {
+        if (
+            session.data &&
+            ADMIN_LIST.includes(session.data.user.email)
+        ) setIsAdmin(true)
+    }, [session])
+
+    return isAdmin && (
+        <Link
+            className="btn-green"
+            href="/admin"
+        >
+            Admin
+        </Link>
+    )
 }
 
 function Menu() {
@@ -283,6 +268,7 @@ function Menu() {
                 <Products />
                 <Services />
                 <Support />
+                <AdminButton />
             </div>
         </div>
     )

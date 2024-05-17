@@ -3,9 +3,12 @@
 @tailwind utilities;
 
 @layer base {
-  
+  html {
+    scroll-behavior: smooth 2s;
+  }
   img {
-    max-height: 200px;
+    width: 100%;
+    max-width: 300px;
   }
 
 }
@@ -24,11 +27,11 @@
   }
 
   .text {
-    @apply text-base font-medium;
+    @apply text-lg font-medium;
   }
 
   .title {
-    @apply text-lg font-black capitalize whitespace-nowrap;
+    @apply text-base md:text-xl xl:text-2xl font-black capitalize whitespace-nowrap;
   }
 
   .title-big {
@@ -38,16 +41,16 @@
 
   .btn-light {
     @apply
-    w-fit p-2 md:px-4 title cursor-pointer
-    outline-none border border-light duration-300 rounded-sm
-    bg-transparent text-light hover:bg-sh-light flex items-center justify-center gap-2;
+    w-fit p-2 md:px-4 text cursor-pointer capitalize
+    outline-none border border-light duration-300 rounded-md
+    bg-transparent text-light hover:bg-light hover:text-dark flex items-center justify-center gap-2;
   }
 
   .btn-dark {
     @apply
-    w-fit p-2 md:px-4 title cursor-pointer
-    outline-none ring-1 ring-sh-dark duration-300 rounded-sm
-    bg-transparent text-dark hover:bg-sh-light flex items-center justify-center gap-2;
+    w-fit p-2 md:px-4 text cursor-pointer capitalize
+    outline-none ring-1 ring-sh-dark duration-300 rounded-md
+    bg-dark text-light hover:opacity-50 flex items-center justify-center gap-2;
   }
 
   .btn-dark-select {
@@ -56,21 +59,29 @@
 
   .btn-red {
     @apply
-    flex items-center justify-center gap-2 w-fit p-2 md:px-4 text-sm cursor-pointer title
-    outline-none rounded-md bg-red-200 text-red-600;
+    w-fit p-2 md:px-4 text cursor-pointer capitalize
+    outline-none duration-300 rounded-md
+    bg-red-500 text-light hover:opacity-50 flex items-center justify-center gap-2;
+  }
+
+  .btn-green {
+    @apply
+    w-fit p-2 md:px-4 text cursor-pointer capitalize
+    outline-none duration-300 rounded-md
+    bg-green-500 text-light hover:opacity-50 flex items-center justify-center gap-2;
   }
 
   .input {
     @apply bg-transparent w-full ring-1 ring-sh-dark
-    p-4 outline-none duration-300 rounded-sm
-    placeholder:text-dark placeholder:opacity-50 focus:bg-sh-light;
+    p-4 placeholder:text-dark placeholder:opacity-50
+   focus:ring-4 duration-300 rounded-md;
   }
 
   .link {
     @apply
-    relative p-2
-    flex items-center justify-center gap-2 title px-2 border-y border-transparent
-    hover:border-b-sh-light duration-300
+    relative p-2 cursor-pointer
+    flex items-center gap-2 opacity-70 hover:opacity-100 text px-2 border-y border-transparent
+    hover:border-b-light duration-300
   }
 
   .menu {

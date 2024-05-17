@@ -1,90 +1,76 @@
 "use client"
-import { useState, useEffect } from "react"
+
+import { useEffect, useState } from "react"
+import { Loading } from "@/components"
 
 export default function Commands() {
 
-    const [data, setData] = useState(null)
+    const [refresh, setRefresh] = useState(false)
+    const [commands, setCommands] = useState(null)
 
     useEffect(() => {
-        fetch("/api?get=commands")
+        fetch("/api/commands")
             .then(res => res.json())
             .then(res => {
-                if (res.status) setData(res.data)
+                if (res.status) {
+                    setCommands(res.commands)
+                }
             })
-    }, [])
+    }, [refresh])
 
-    const funcChangeStatus = (command) => {
-
-        setData(commands => commands.map(c => {
-            return c._id === command._id ? {
-                ...command,
-                status: command.status < 3 ? command.status + 1 : 1
-            } : c
-        }))
-
-        fetch("/api", {
-            method: "POST",
+    const funcDeleteCommand = (_id) => {
+        fetch("/api/commands", {
+            method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                action: "update-command",
-                command: {
-                    ...command,
-                    status: command.status < 3 ? command.status + 1 : 1
-                }
-            })
+            body: JSON.stringify({ _id })
         })
             .then(res => res.json())
             .then(res => {
                 if (res.status) {
-                    // notify
+                    setRefresh(state => !state)
                 }
             })
     }
 
-    return data && (
-        <div className="w-full flex flex-col p-4 text-sm">
-            <div className="bg-dark text-light grid grid-cols-6 p-4">
-                <div>User</div>
-                <div>Address</div>
-                <div>Phone</div>
-                <div>Date</div>
-                <div>Command</div>
-                <div>Status</div>
-            </div>
-            {
-                data.map(command => {
-                    return (
-                        <div
-                            key={command._id}
-                            className="grid grid-cols-6 items-center odd:bg-sh-dark p-4"
-                        >
-                            <div className="flex flex-col">
-                                <span>{command.name}</span>
-                                <span className="text-xs">
-                                    {command.email.slice(0, command.email.indexOf("@")) + "@..."}
-                                </span>
-                            </div>
-                            <div>{command.address}</div>
-                            <div>{command.phone}</div>
-                            <div>{command.date}</div>
-                            <div>{command.type}</div>
+    return commands ? (
+        <div className="flex flex-col w-full gap-10 p-4 overflow-y-scroll">
+            <div className="title">commands management</div>
+            <div className="flex flex-col gap-10 p-10 bg-white rounded-md shadow-md shadow-sh-dark" >
+                <div className="grid grid-cols-7 justify-start">
+                    <span className="title">#</span>
+                    <span className="title">name</span>
+                    <span className="title">type</span>
+                    <span className="title">phone</span>
+                    <span className="title">address</span>
+                    <span className="title">date</span>
+                    <span className="title">status</span>
+                </div>
+                {
+                    commands.map((command, index) => {
+                        return (
                             <div
-                                className={`p-2 w-fit cursor-pointer\
-                                ${command.status === 1 ? "bg-yellow-300":""}\
-                                ${command.status === 2 ? "bg-green-300":""}\
-                                ${command.status === 3 ? "bg-red-300":""}`}
-                                onClick={() => funcChangeStatus(command)}
+                                key={index}
+                                className="grid grid-cols-7 justify-start items-center"
                             >
-                                {command.status === 1 && "Pending"}
-                                {command.status === 2 && "Success"}
-                                {command.status === 3 && "Unsuccess"}
+                                <span className="text">{index}</span>
+                                <span className="text">{command.name}</span>
+                                <span className="text">{command.type}</span>
+                                <span className="text">{command.phone}</span>
+                                <span className="text">{command.address}</span>
+                                <span className="text">{command.date}</span>
+                                <button
+                                    className="btn-red"
+                                    onClick={() => funcDeleteCommand(command._id)}
+                                >
+                                    Delete
+                                </button>
                             </div>
-                        </div>
-                    )
-                })
-            }
+                        )
+                    })
+                }
+            </div>
         </div>
-    )
+    ) : <Loading />
 }
